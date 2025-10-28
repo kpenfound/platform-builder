@@ -39,7 +39,7 @@ To create a new component called Foo, from the project root run:
 dagger init --sdk go foo
 ```
 
-2. Implement the `Install` and `Status` functions in the module's main.go. Use the Argo CD module as a reference.
+2. Implement the `Install` and `Status` functions in the module's main.go. Use the Argo CD implementation in `./argocd/main.go` as a reference.
 
 3. Implement the component in the main module in `./main.go`:
 
