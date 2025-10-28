@@ -32,7 +32,7 @@ func (m *PlatformBuilder) CheckConfig(ctx context.Context) (string, error) {
 		CombinedOutput(ctx)
 }
 
-// Checks the configuration of the platform
+// List all pods in the platform
 func (m *PlatformBuilder) GetPods(ctx context.Context) (string, error) {
 	return dag.Kubectl(m.Kubeconfig).
 		Container().
