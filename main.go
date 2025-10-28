@@ -9,29 +9,25 @@ import (
 
 type PlatformBuilder struct {
 	// +private
-	Kubeconfig *dagger.File
+	Kubeconfig *dagger.Secret
+	GitOps     *dagger.PlatformComponent
 }
 
 func New(
 	// +optional
-	kubeconfig *dagger.File,
+	kubeconfig *dagger.Secret,
 ) *PlatformBuilder {
 	return &PlatformBuilder{
 		Kubeconfig: kubeconfig,
+		// GitOps = Argo CD
+		GitOps: dag.Argocd().AsPlatformComponent(),
 	}
 }
 
 // Checks the configuration of the platform
 func (m *PlatformBuilder) CheckConfig(ctx context.Context) (string, error) {
-	return dag.Container().From("alpine:latest").Stdout(ctx)
-}
-
-// Installs GitOps into your cluster
-func (m *PlatformBuilder) InstallGitOps(ctx context.Context) (string, error) {
-	return dag.Container().From("alpine:latest").Stdout(ctx)
-}
-
-// Installs Foo into your cluster
-func (m *PlatformBuilder) InstallFoo(ctx context.Context) (string, error) {
-	return dag.Container().From("alpine:latest").Stdout(ctx)
+	return dag.Kubectl(m.Kubeconfig).
+		Container().
+		WithExec([]string{"kubectl", "version"}).
+		Stdout(ctx)
 }

@@ -1,0 +1,7 @@
+{
+  "name": "argocd",
+  "engineVersion": "v0.19.3",
+  "sdk": {
+    "source": "go"
+  }
+}
