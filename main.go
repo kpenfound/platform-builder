@@ -9,13 +9,13 @@ import (
 
 type PlatformBuilder struct {
 	// +private
-	Kubeconfig *dagger.Secret
-	GitOps     *dagger.PlatformComponent
+	Kubeconfig *dagger.File
+	// +private
+	GitOps *dagger.PlatformComponent
 }
 
 func New(
-	// +optional
-	kubeconfig *dagger.Secret,
+	kubeconfig *dagger.File,
 ) *PlatformBuilder {
 	return &PlatformBuilder{
 		Kubeconfig: kubeconfig,
@@ -28,6 +28,16 @@ func New(
 func (m *PlatformBuilder) CheckConfig(ctx context.Context) (string, error) {
 	return dag.Kubectl(m.Kubeconfig).
 		Container().
-		WithExec([]string{"kubectl", "version"}).
-		Stdout(ctx)
+		WithExec([]string{"kubectl", "config", "view"}).
+		CombinedOutput(ctx)
+}
+
+// Install GitOps
+func (m *PlatformBuilder) InstallGitOps(ctx context.Context) (string, error) {
+	return m.GitOps.Install(ctx, m.Kubeconfig)
+}
+
+// GitOps Status
+func (m *PlatformBuilder) StatusGitOps(ctx context.Context) (string, error) {
+	return m.GitOps.Status(ctx, m.Kubeconfig)
 }

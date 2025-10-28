@@ -8,13 +8,13 @@ import (
 )
 
 type Platform struct {
-	kubeconfig *dagger.Secret
+	kubeconfig *dagger.File
 }
 
 type Component interface {
 	dagger.DaggerObject
-	Install(ctx context.Context, kubeconfig *dagger.Secret) (string, error)
-	Status(ctx context.Context, kubeconfig *dagger.Secret) (string, error)
+	Install(ctx context.Context, kubeconfig *dagger.File) (string, error)
+	Status(ctx context.Context, kubeconfig *dagger.File) (string, error)
 }
 
 // Install platform component into a cluster
