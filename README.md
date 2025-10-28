@@ -29,6 +29,26 @@ A component has two functions:
 
 The GitOps component installs ArgoCD.
 
+### Creating a new component
+
+1. First create a Dagger module in a subdirectory.
+
+To create a new component called Foo, run
+
+```
+dagger init --sdk go foo
+```
+
+2. Implement the `Install` and `Status` functions in the module's main.go. Use the Argo CD module as a reference.
+
+3. Implement the component in the main module.
+
+- The PlatformBuilder struct will need a field for an instance of the new component as a `*dagger.PlatformComponent` that must be decorated with `// +private`
+- The PlatformBuilder constructor should create an instance of the new component and converted into the interface with `.AsPlatformComponent()`.
+- Create the corresponding `InstallFoo` and `StatusFoo` functions in the platform module for the new component.
+
+4. Install the new component in the Test function in `test/main.go`.
+
 ## Utility Modules
 
 These utility modules can be used by components to interact with the platform
