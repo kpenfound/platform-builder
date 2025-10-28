@@ -1,0 +1,14 @@
+{
+  "name": "platform-builder",
+  "engineVersion": "v0.19.3",
+  "sdk": {
+    "source": "go"
+  },
+  "dependencies": [
+    {
+      "name": "kubectl",
+      "source": "github.com/matipan/daggerverse/kubectl@main",
+      "pin": "79143beabbbf15e807a7a935ccb1c56e24279286"
+    }
+  ]
+}
