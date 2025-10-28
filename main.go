@@ -32,6 +32,14 @@ func (m *PlatformBuilder) CheckConfig(ctx context.Context) (string, error) {
 		CombinedOutput(ctx)
 }
 
+// Checks the configuration of the platform
+func (m *PlatformBuilder) GetPods(ctx context.Context) (string, error) {
+	return dag.Kubectl(m.Kubeconfig).
+		Container().
+		WithExec([]string{"kubectl", "get", "pods", "--all-namespaces", "-o", "wide"}).
+		CombinedOutput(ctx)
+}
+
 // Install GitOps
 func (m *PlatformBuilder) InstallGitOps(ctx context.Context) (string, error) {
 	return m.GitOps.Install(ctx, m.Kubeconfig)

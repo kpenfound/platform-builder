@@ -4,6 +4,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 )
 
 type Test struct{}
@@ -20,5 +21,27 @@ func (m *Test) Test(ctx context.Context) (string, error) {
 	}
 
 	// 2. run the platform-builder against k3s
-	return dag.PlatformBuilder(k3s.Config()).CheckConfig(ctx)
+	platformBuilder := dag.PlatformBuilder(k3s.Config())
+	// Install GitOps
+	gitops, err := platformBuilder.
+		InstallGitOps(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	// Check Config
+	config, err := platformBuilder.
+		CheckConfig(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	// Get Pods
+	pods, err := platformBuilder.
+		GetPods(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("GITOPS:\n%s\n\nCONFIG:\n%s\n\nPODS:\n%s\n", gitops, config, pods), nil
 }
