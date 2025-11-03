@@ -24,7 +24,7 @@ func (m *Test) Test(ctx context.Context) (string, error) {
 	platformBuilder := dag.PlatformBuilder(k3s.Config())
 	// Install GitOps
 	gitops, err := platformBuilder.
-		InstallGitOps(ctx)
+		Install(ctx, "gitops")
 	if err != nil {
 		return "", err
 	}

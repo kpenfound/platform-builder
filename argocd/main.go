@@ -23,3 +23,18 @@ func (m *Argocd) Install(ctx context.Context, kubeconfig *dagger.File) (string, 
 func (m *Argocd) Status(ctx context.Context, kubeconfig *dagger.File) (string, error) {
 	return dag.Container().From("alpine:latest").Stdout(ctx)
 }
+
+// Configures Argocd with a git repository
+func (m *Argocd) ConfigureRepository(ctx context.Context, kubeconfig *dagger.File, gitRepo string) (string, error) {
+	return dag.Container().From("alpine:latest").Stdout(ctx)
+}
+
+// Upgrade Argocd in a cluster
+func (m *Argocd) Upgrade(ctx context.Context, kubeconfig *dagger.File) (string, error) {
+	return dag.Container().From("alpine:latest").Stdout(ctx)
+}
+
+// Uninstall Argocd from a cluster
+func (m *Argocd) Uninstall(ctx context.Context, kubeconfig *dagger.File) (string, error) {
+	return dag.Container().From("alpine:latest").Stdout(ctx)
+}

@@ -5,11 +5,14 @@ A utility for platform builders to provide easy installation and management of p
 ## Dagger Functions
 
 ```
-Name              Description
-check-config      Checks the configuration of the platform
-get-pods          List all pods in the platform
-install-git-ops   Install GitOps
-status-git-ops    GitOps Status
+Name                   Description
+check-config           Checks the configuration of the platform
+configure-repository   Configure repository for a component
+get-pods               List all pods in the platform
+install                Install a component
+status                 Status of a component
+uninstall              Uninstall a component
+upgrade                Upgrade a component
 ```
 
 ## Components
@@ -24,6 +27,9 @@ A component has two functions:
 
 - `Install`: install the component into a cluster.
 - `Status`: get the status of the component in the cluster.
+- `ConfigureRepository`: configure the repository for the component.
+- `Upgrade`: upgrade the component in the cluster.
+- `Uninstall`: uninstall the component from a cluster.
 
 ### GitOps
 
@@ -39,13 +45,9 @@ To create a new component called Foo, from the project root run:
 dagger init --sdk go foo
 ```
 
-2. Implement the `Install` and `Status` functions in the module's main.go. Use the Argo CD implementation in `./argocd/main.go` as a reference.
+2. Implement the interface functions in the module's main.go. Use the Argo CD implementation in `./argocd/main.go` as a reference.
 
-3. Implement the component in the main module in `./main.go`:
-
-- The PlatformBuilder struct will need a field for an instance of the new component as a `*dagger.PlatformComponent` that must be decorated with `// +private`.
-- The PlatformBuilder constructor should create an instance of the new component and converted into the interface with `.AsPlatformComponent()`.
-- Create the corresponding `InstallFoo` and `StatusFoo` functions in the platform module for the new component.
+3. Implement the component in the main module in `./main.go`. The PlatformBuilder constructor should create an instance of the new component and converted into the interface with `.AsPlatformComponent()`.
 
 4. Install the new component in the Test function in `test/main.go`.
 

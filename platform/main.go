@@ -15,6 +15,9 @@ type Component interface {
 	dagger.DaggerObject
 	Install(ctx context.Context, kubeconfig *dagger.File) (string, error)
 	Status(ctx context.Context, kubeconfig *dagger.File) (string, error)
+	ConfigureRepository(ctx context.Context, kubeconfig *dagger.File, gitRepo string) (string, error)
+	Upgrade(ctx context.Context, kubeconfig *dagger.File) (string, error)
+	Uninstall(ctx context.Context, kubeconfig *dagger.File) (string, error)
 }
 
 // Install platform component into a cluster
