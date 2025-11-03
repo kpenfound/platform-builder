@@ -25,10 +25,18 @@ func New(
 ) *PlatformBuilder {
 	components := []NamedComponent{}
 
-	// Add components here
+	// Add components here!!! ================
+
+	// GitOps => ArgoCD
 	components = append(components, NamedComponent{
 		Name:      "gitops",
 		Component: dag.Argocd().AsPlatformComponent(),
+	})
+
+	// Observability => Grafana
+	components = append(components, NamedComponent{
+		Name:      "observability",
+		Component: dag.Grafana().AsPlatformComponent(),
 	})
 
 	return &PlatformBuilder{
@@ -63,12 +71,33 @@ func (m *PlatformBuilder) Install(ctx context.Context, name string) (string, err
 }
 
 // Status of a component
-func (m *PlatformBuilder) Status(ctx context.Context, name string) (string, error) {
-	component, err := m.findComponent(name)
-	if err != nil {
-		return "", err
+func (m *PlatformBuilder) Status(
+	ctx context.Context,
+	name string, // +optional
+) (string, error) {
+	components := m.Components
+	if name != "" {
+		component, err := m.findComponent(name)
+		if err != nil {
+			return "", err
+		}
+		components = []NamedComponent{
+			{
+				Name:      name,
+				Component: component,
+			},
+		}
 	}
-	return component.Status(ctx, m.Kubeconfig)
+
+	status := ""
+	for _, component := range components {
+		s, err := component.Component.Status(ctx, m.Kubeconfig)
+		if err != nil {
+			return "", err
+		}
+		status += fmt.Sprintf("%s:\t%s\n", component.Name, s)
+	}
+	return status, nil
 }
 
 // Configure repository for a component

@@ -1,0 +1,13 @@
+{
+  "name": "grafana",
+  "engineVersion": "v0.19.4",
+  "sdk": {
+    "source": "go"
+  },
+  "dependencies": [
+    {
+      "name": "helm",
+      "source": "../../helm"
+    }
+  ]
+}

@@ -7,7 +7,7 @@
   "dependencies": [
     {
       "name": "helm",
-      "source": "../helm"
+      "source": "../../helm"
     }
   ],
   "disableDefaultFunctionCaching": true

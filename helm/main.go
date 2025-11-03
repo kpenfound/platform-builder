@@ -5,6 +5,7 @@ package main
 import (
 	"context"
 	"dagger/helm/internal/dagger"
+	"strings"
 )
 
 type Helm struct {
@@ -17,12 +18,39 @@ func New(kubeconfig *dagger.File) *Helm {
 	}
 }
 
-// Returns lines that match a pattern in the files of the provided Directory
+// Install or upgrade a helm chart
 func (m *Helm) UpgradeInstall(ctx context.Context, name, chart string) (string, error) {
-	return dag.Container().From("alpine/helm").
-		WithExec([]string{"apk", "add", "kubectl"}).
-		WithEnvVariable("KUBECONFIG", "/.kube/config").
-		WithFile("/.kube/config", m.Kubeconfig).
+	return m.base().
 		WithExec([]string{"helm", "upgrade", "--install", "--force", "--wait", "--debug", name, chart}).
 		Stdout(ctx)
+}
+
+// Uninstall a helm chart
+func (m *Helm) Uninstall(ctx context.Context, name string) (string, error) {
+	return m.base().
+		WithExec([]string{"helm", "uninstall", name, "-o", "json"}).
+		Stdout(ctx)
+}
+
+// Status of a helm chart
+func (m *Helm) Status(ctx context.Context, name string) (string, error) {
+	status, err := m.base().
+		WithExec([]string{"sh", "-c", "helm status " + name + " -o json | jq .info.status"}).
+		Stdout(ctx)
+	if err != nil {
+		return "", err
+	}
+	if status == "" {
+		return "not installed", nil
+	}
+	return strings.ReplaceAll(strings.TrimSpace(status), "\"", ""), nil
+}
+
+// Base container for Helm operations
+func (m *Helm) base() *dagger.Container {
+	return dag.Container().From("alpine/helm").
+		WithExec([]string{"apk", "add", "kubectl"}).
+		WithExec([]string{"apk", "add", "jq"}).
+		WithEnvVariable("KUBECONFIG", "/.kube/config").
+		WithFile("/.kube/config", m.Kubeconfig)
 }

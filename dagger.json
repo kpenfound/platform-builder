@@ -7,7 +7,11 @@
   "dependencies": [
     {
       "name": "argocd",
-      "source": "argocd"
+      "source": "components/argocd"
+    },
+    {
+      "name": "grafana",
+      "source": "components/grafana"
     },
     {
       "name": "kubectl",
