@@ -29,3 +29,18 @@ func (pc *Platform) Install(ctx context.Context, component Component) (string, e
 func (pc *Platform) Status(ctx context.Context, component Component) (string, error) {
 	return component.Status(ctx, pc.kubeconfig)
 }
+
+// Upgrade platform component in the cluster
+func (pc *Platform) Upgrade(ctx context.Context, component Component) (string, error) {
+	return component.Upgrade(ctx, pc.kubeconfig)
+}
+
+// Uninstall platform component from the cluster
+func (pc *Platform) Uninstall(ctx context.Context, component Component) (string, error) {
+	return component.Uninstall(ctx, pc.kubeconfig)
+}
+
+// Configure platform component in the cluster
+func (pc *Platform) ConfigureRepository(ctx context.Context, component Component, config string) (string, error) {
+	return component.ConfigureRepository(ctx, pc.kubeconfig, config)
+}

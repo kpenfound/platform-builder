@@ -1,4 +1,4 @@
-// A generated module for Helm functions
+// A module for Helm functions
 
 package main
 
@@ -48,9 +48,9 @@ func (m *Helm) Status(ctx context.Context, name string) (string, error) {
 
 // Base container for Helm operations
 func (m *Helm) base() *dagger.Container {
-	return dag.Container().From("alpine/helm").
+	return dag.Container().From("alpine/helm:3.19").
 		WithExec([]string{"apk", "add", "kubectl"}).
 		WithExec([]string{"apk", "add", "jq"}).
-		WithEnvVariable("KUBECONFIG", "/.kube/config").
-		WithFile("/.kube/config", m.Kubeconfig)
+		WithFile("/.kube/config", m.Kubeconfig).
+		WithEnvVariable("KUBECONFIG", "/.kube/config")
 }

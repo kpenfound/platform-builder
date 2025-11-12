@@ -23,28 +23,25 @@ func (m *Test) Test(ctx context.Context) (string, error) {
 	// 2. run the platform-builder against k3s
 	platformBuilder := dag.PlatformBuilder(k3s.Config())
 	// Install GitOps
+	// dagger call install --name gitops
 	_, err = platformBuilder.Install(ctx, "gitops")
 	if err != nil {
 		return "", err
 	}
 
-	// Check Config
-	config, err := platformBuilder.CheckConfig(ctx)
-	if err != nil {
-		return "", err
-	}
-
 	// Get Pods
+	// dagger call get-pods
 	pods, err := platformBuilder.GetPods(ctx)
 	if err != nil {
 		return "", err
 	}
 
 	// Status
+	// dagger call status
 	status, err := platformBuilder.Status(ctx)
 	if err != nil {
 		return "", err
 	}
 
-	return fmt.Sprintf("CONFIG:\n%s\n\nPODS:\n%s\n\nSTATUS:\n%s\n", config, pods, status), nil
+	return fmt.Sprintf("PODS:\n%s\n\nSTATUS:\n%s\n", pods, status), nil
 }
